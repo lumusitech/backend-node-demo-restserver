@@ -8,7 +8,7 @@ class Server {
     this.app = express();
     this.basePath = "/api/v1";
     this.usersPath = "users";
-    this.port = process.env.PORT | 3000;
+    this.port = process.env.PORT;
     this.setMiddlewares();
     this.setStatics();
     this.setRoutes();
@@ -28,7 +28,7 @@ class Server {
   }
 
   start() {
-    this.app.listen(this.port, () => {
+    this.app.listen(this.port || 5000, () => {
       console.log(`Server running on port ${this.port}`);
     });
   }
