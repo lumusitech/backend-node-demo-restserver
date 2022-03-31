@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const usersRouter = require("../routes/users.routes");
 require("dotenv").config();
+
+const { dbConnection } = require("../database/config");
+const usersRouter = require("../routes/users.routes");
 
 class Server {
   constructor() {
@@ -9,9 +11,14 @@ class Server {
     this.basePath = "/api/v1";
     this.usersPath = "users";
     this.port = process.env.PORT;
+    this.setDB();
     this.setMiddlewares();
     this.setStatics();
     this.setRoutes();
+  }
+
+  setDB() {
+    dbConnection();
   }
 
   setMiddlewares() {
