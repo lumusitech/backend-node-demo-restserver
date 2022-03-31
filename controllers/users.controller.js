@@ -1,38 +1,76 @@
-const getUsers = (req, res) => {
-  res.json({ msg: "get /users - controller" });
-};
+const { genSalt, hash } = require("bcryptjs");
 
-const getUser = (req, res) => {
-  const { id } = req.params;
+const User = require("../models/user");
+
+const getUsers = async (req, res) => {
+  const { skip = 0, limit = 5, state = true } = req.query;
+
+  const [users, count] = await Promise.all([
+    User.find({ state }).skip(Number(skip)).limit(Number(limit)),
+    User.find().countDocuments({ state }),
+  ]);
   res.json({
-    msg: "get /users/:id - controller",
-    id,
+    count,
+    users,
   });
 };
 
-const postUsers = (req, res) => {
-  const { body } = req;
+const getUser = async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+  res.json(user);
+};
+
+const postUsers = async (req, res) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password, role });
+
+  const salt = await genSalt();
+  user.password = await hash(password, salt);
+
+  await user.save();
+
+  res.json(user);
+};
+
+const putUsers = async (req, res) => {
+  const { id } = req.params;
+  const { _id, password, google, email, ...rest } = req.body;
+
+  if (password) {
+    const salt = await genSalt();
+    rest.password = await hash(password, salt);
+  }
+
+  const user = await User.findByIdAndUpdate(id, rest, { new: true });
+
   res.json({
-    msg: "post /users - controller",
-    ...body,
+    user,
   });
 };
 
-const putUsers = (req, res) => {
+const deleteUser = async (req, res) => {
   const { id } = req.params;
-  const { body } = req;
-  res.json({
-    msg: "put /users - controller",
+
+  const userDeleted = await User.findByIdAndUpdate(
     id,
-    ...body,
+    { state: false },
+    { new: true }
+  );
+
+  res.json({
+    userDeleted,
   });
 };
 
-const deleteUsers = (req, res) => {
+const realDeleteUser = async (req, res) => {
   const { id } = req.params;
+
+  const userDeleted = await User.findByIdAndDelete(id);
+
   res.json({
-    msg: "delete /users - controller",
-    id,
+    userDeleted,
   });
 };
 
@@ -41,5 +79,6 @@ module.exports = {
   getUser,
   postUsers,
   putUsers,
-  deleteUsers,
+  deleteUser,
+  realDeleteUser,
 };
