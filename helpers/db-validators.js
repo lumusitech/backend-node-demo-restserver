@@ -21,9 +21,9 @@ const userExistsById = async (id = "") => {
 };
 
 const userBeforeDeleted = async (id = "") => {
-  const userWasDeleted = await User.find({ id, state: false });
+  const userToDelete = await User.findById(id);
 
-  if (userWasDeleted) {
+  if (userToDelete.state === false) {
     throw new Error(`User with id ${id} is not exists or already was deleted`);
   }
 };

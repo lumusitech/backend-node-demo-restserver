@@ -1,7 +1,12 @@
 const { Router } = require("express");
-const { body, param } = require("express-validator");
+const { body, param, header } = require("express-validator");
 
-const { validateFields } = require("../middlewares/validate-fields");
+const {
+  validateJWT,
+  isAdminRole,
+  hasRole,
+  validateFields,
+} = require("../middlewares");
 
 const {
   getUsers,
@@ -41,8 +46,8 @@ usersRouter.post(
     body("email").custom(emailExists),
     body("password", "password should be min length 6").isLength({ min: 6 }),
     body("role").custom(isValidRole),
+    validateFields,
   ],
-  validateFields,
   postUsers
 );
 
@@ -60,6 +65,9 @@ usersRouter.put(
 usersRouter.delete(
   "/:id",
   [
+    validateJWT,
+    // isAdminRole,
+    hasRole("ADMIN_ROLE", "SELLER_ROLE"),
     param("id", "is not a mongo id").isMongoId(),
     param("id").custom(userExistsById),
     param("id").custom(userBeforeDeleted),
@@ -67,6 +75,7 @@ usersRouter.delete(
   ],
   deleteUser
 );
+
 usersRouter.delete(
   "/real-delete/:id",
   [

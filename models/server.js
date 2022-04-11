@@ -3,13 +3,16 @@ const cors = require("cors");
 require("dotenv").config();
 
 const { dbConnection } = require("../database/config");
+
 const usersRouter = require("../routes/users.routes");
+const authRouter = require("../routes/auth.routes");
 
 class Server {
   constructor() {
     this.app = express();
     this.basePath = "/api/v1";
     this.usersPath = "users";
+    this.authPath = "auth";
     this.port = process.env.PORT;
     this.setDB();
     this.setMiddlewares();
@@ -31,6 +34,7 @@ class Server {
   }
 
   setRoutes() {
+    this.app.use(`${this.basePath}/${this.authPath}`, authRouter);
     this.app.use(`${this.basePath}/${this.usersPath}`, usersRouter);
   }
 
