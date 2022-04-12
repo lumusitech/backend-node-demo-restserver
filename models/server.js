@@ -16,7 +16,6 @@ class Server {
     this.port = process.env.PORT;
     this.setDB();
     this.setMiddlewares();
-    this.setStatics();
     this.setRoutes();
   }
 
@@ -27,9 +26,6 @@ class Server {
   setMiddlewares() {
     this.app.use(express.json());
     this.app.use(cors());
-  }
-
-  setStatics() {
     this.app.use(express.static("public"));
   }
 
