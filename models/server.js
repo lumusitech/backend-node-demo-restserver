@@ -4,15 +4,23 @@ require("dotenv").config();
 
 const { dbConnection } = require("../database/config");
 
-const usersRouter = require("../routes/users.routes");
 const authRouter = require("../routes/auth.routes");
+const categoriesRouter = require("../routes/categories.routes");
+const findRouter = require("../routes/find.routes");
+const usersRouter = require("../routes/users.routes");
+const productsRouter = require("../routes/products.routes");
 
 class Server {
   constructor() {
     this.app = express();
-    this.basePath = "/api/v1";
-    this.usersPath = "users";
-    this.authPath = "auth";
+    this.paths = {
+      auth: "auth",
+      base: "/api/v1",
+      categories: "categories",
+      find: "find",
+      products: "products",
+      users: "users",
+    };
     this.port = process.env.PORT;
     this.setDB();
     this.setMiddlewares();
@@ -30,8 +38,18 @@ class Server {
   }
 
   setRoutes() {
-    this.app.use(`${this.basePath}/${this.authPath}`, authRouter);
-    this.app.use(`${this.basePath}/${this.usersPath}`, usersRouter);
+    this.app.use(`${this.paths.base}/${this.paths.auth}`, authRouter);
+
+    this.app.use(
+      `${this.paths.base}/${this.paths.categories}`,
+      categoriesRouter
+    );
+
+    this.app.use(`${this.paths.base}/${this.paths.find}`, findRouter);
+
+    this.app.use(`${this.paths.base}/${this.paths.products}`, productsRouter);
+
+    this.app.use(`${this.paths.base}/${this.paths.users}`, usersRouter);
   }
 
   start() {

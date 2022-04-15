@@ -1,6 +1,6 @@
 const { genSalt, hash } = require("bcryptjs");
 
-const User = require("../models/user");
+const { User } = require("../models");
 
 const getUsers = async (req, res) => {
   const { skip = 0, limit = 5, state = true } = req.query;
