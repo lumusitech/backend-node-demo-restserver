@@ -22,7 +22,7 @@ const {
   emailExists,
   userExistsById,
   userBeforeDeleted,
-} = require("../helpers/db-validators");
+} = require("../helpers");
 
 const usersRouter = Router();
 

@@ -15,6 +15,9 @@ const productSchema = Schema({
     require: [true, "available param is required"],
     default: true,
   },
+  img: {
+    type: String,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

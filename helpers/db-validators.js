@@ -73,7 +73,19 @@ const isValidCategory = async (name = "") => {
   }
 };
 
+/**
+ * Validate allowed collections
+ */
+const allowedCollections = (collection = "", collections = []) => {
+  if (!collections.includes(collection)) {
+    throw new Error(`${collection} is not a valid collection`);
+  }
+
+  return true;
+};
+
 module.exports = {
+  allowedCollections,
   isValidRole,
   emailExists,
   userExistsById,

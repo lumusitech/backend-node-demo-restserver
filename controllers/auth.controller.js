@@ -1,6 +1,6 @@
 const { compare } = require("bcryptjs");
-const generateJWT = require("../helpers/generateJWT");
-const { googleVerify } = require("../helpers/google.verify");
+const generateJWT = require("../helpers/generate-jwt");
+const { googleVerify } = require("../helpers/google-verify");
 
 const User = require("../models/user");
 
